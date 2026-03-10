@@ -1,0 +1,40 @@
+[
+  {
+    "PK": "USER#local-dev-user",
+    "SK": "APP#3987e677-b19c-428f-9276-a404a2398fe5",
+    "id": "3987e677-b19c-428f-9276-a404a2398fe5",
+    "userId": "local-dev-user",
+    "company": "Meta",
+    "title": "Software Engineer",
+    "status": "interviewing",
+    "method": "Recruiter",
+    "dateApplied": "2026-03-10",
+    "lastUpdated": "2026-03-10"
+  },
+  {
+    "PK": "USER#local-dev-user",
+    "SK": "PROFILE",
+    "userId": "local-dev-user",
+    "displayName": "Dev User",
+    "isPublic": true,
+    "shareToken": "20cf9dad-435b-42fc-ab08-465801c4fd9d"
+  },
+  {
+    "PK": "SHARE#20cf9dad-435b-42fc-ab08-465801c4fd9d",
+    "SK": "PROFILE",
+    "userId": "local-dev-user",
+    "shareToken": "20cf9dad-435b-42fc-ab08-465801c4fd9d"
+  },
+  {
+    "PK": "USER#local-dev-user",
+    "SK": "INT#18ce4c8b-e98b-4a6e-8349-167065aefbb6",
+    "id": "18ce4c8b-e98b-4a6e-8349-167065aefbb6",
+    "userId": "local-dev-user",
+    "company": "meta",
+    "title": "software",
+    "type": "Recruiter Call",
+    "date": "2026-03-10",
+    "time": "2:00PM",
+    "tentative": false
+  }
+]

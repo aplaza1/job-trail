@@ -1,0 +1,23 @@
+{
+  "name": "job-trail",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend",
+    "infra"
+  ],
+  "scripts": {
+    "dev": "concurrently --names \"api,ui\" --prefix-colors \"cyan,magenta\" \"cd backend && npm run dev:server\" \"cd frontend && npm run dev\"",
+    "dev:ui": "cd frontend && npm run dev",
+    "dev:api": "cd backend && npm run dev:server",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "build": "npm run build:backend && npm run build:frontend",
+    "infra:diff": "cd infra && npx cdk diff --all",
+    "infra:deploy": "cd infra && npx cdk deploy --all"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
