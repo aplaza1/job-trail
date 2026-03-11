@@ -1645,13 +1645,6 @@ img, svg { display: block; max-width: 100%; }
   border-color: var(--border-light);
 }
 
-@media (max-width: 640px) {
-  .theme-toggle-btn {
-    width: 30px;
-    height: 30px;
-    margin-right: 0.25rem;
-  }
-}
 
 /* ===== DARK MODE OVERRIDES FOR HARDCODED COLORS ===== */
 [data-theme="dark"] .alert--error {
