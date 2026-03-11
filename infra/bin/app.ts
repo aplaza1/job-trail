@@ -8,7 +8,7 @@ import { HostingStack } from '../lib/hosting-stack';
 import { CertificateStack } from '../lib/certificate-stack';
 import { DnsStack } from '../lib/dns-stack';
 
-const app = new cdk.App({ crossRegionReferences: true });
+const app = new cdk.App();
 
 const env = {
   account: process.env.CDK_DEFAULT_ACCOUNT,
