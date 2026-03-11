@@ -11,7 +11,6 @@ export interface Application {
   dateApplied: string; // YYYY-MM-DD
   lastUpdated: string;
   link?: string;
-  notes?: string;
 }
 
 export interface Interview {
@@ -23,7 +22,6 @@ export interface Interview {
   date: string; // YYYY-MM-DD
   time: string; // "HH:MM AM/PM" | "TBD"
   tentative: boolean;
-  notes?: string;
 }
 
 export interface Profile {
