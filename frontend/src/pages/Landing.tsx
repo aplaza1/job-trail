@@ -8,26 +8,26 @@ export function Landing() {
         <div className="landing-hero">
           <div className="landing-badge">Open-Source Job Tracker</div>
           <h1 className="landing-headline">
-            Built as a joke.<br />
-            Kept because it works.<br />
-            <span className="landing-headline--accent">Free forever.</span>
+            Track your job search.<br />
+            Organize applications and interviews.<br />
+            <span className="landing-headline--accent">Share your progress.</span>
           </h1>
           <p className="landing-desc">
-            This started as alexappliesforjobs.com, complete with fake donations and other
-            nonsense. People found it genuinely useful, so now it&apos;s open source and available
-            for anyone who wants a clean way to track applications and interviews.
+            This started as{' '}
+            <a href="https://alexappliesforjobs.com" target="_blank" rel="noreferrer">
+              alexappliesforjobs.com
+            </a>
+            , complete with fake donations and other nonsense. People found it genuinely useful,
+            so now it&apos;s open source and available for anyone who wants a clean way to track
+            applications and interviews.
           </p>
           <div className="landing-cta">
             <Link to="/signup" className="btn btn-primary btn--lg">Create Account</Link>
             <Link to="/login" className="btn btn-secondary btn--lg">Sign In</Link>
           </div>
           <p className="landing-footnote">
-            No monetization plan · Open source · Free forever
-          </p>
-          <p className="landing-footnote" style={{ marginTop: '0.5rem' }}>
-            Origin story:{' '}
-            <a href="https://alexappliesforjobs.com" target="_blank" rel="noreferrer">
-              alexappliesforjobs.com
+            <a href="https://github.com/aplaza1/job-trail" target="_blank" rel="noreferrer">
+              View on GitHub
             </a>
           </p>
         </div>
