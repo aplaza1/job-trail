@@ -27,7 +27,7 @@ export function InterviewForm({ editId, applicationId, prefillCompany, prefillTi
   const [type,      setType]      = useState('Recruiter Call');
   const [date,      setDate]      = useState(todayISO());
   const [time,      setTime]      = useState('');
-  const [isTbd,     setIsTbd]     = useState(true);
+  const [isTbd,     setIsTbd]     = useState(false);
   const [tentative, setTentative] = useState(false);
   const [notes,     setNotes]     = useState('');
 
