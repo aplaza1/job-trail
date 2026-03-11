@@ -4,7 +4,7 @@ import { Layout } from '../components/Layout';
 import { StatsCounter } from '../components/StatsCounter';
 import { ApplicationsTable } from '../components/ApplicationsTable';
 import { InterviewCalendar } from '../components/InterviewCalendar';
-import { api } from '../lib/api';
+import { ApiError, api } from '../lib/api';
 import type { PublicDashboard } from '../types';
 
 export function PublicView() {
@@ -12,22 +12,29 @@ export function PublicView() {
   const [data, setData] = useState<PublicDashboard | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    setLoading(true);
+    setNotFound(false);
+    setError(null);
+    setData(null);
+
     if (!shareToken) {
       setNotFound(true);
       setLoading(false);
       return;
     }
+
     api.getPublicDashboard(shareToken)
-      .then(d => {
-        if (!d || (d as { error?: string }).error) {
+      .then(setData)
+      .catch((err: unknown) => {
+        if (err instanceof ApiError && err.status === 404) {
           setNotFound(true);
-        } else {
-          setData(d);
+          return;
         }
+        setError(err instanceof Error ? err.message : 'Failed to load dashboard');
       })
-      .catch(() => setNotFound(true))
       .finally(() => setLoading(false));
   }, [shareToken]);
 
@@ -43,6 +50,10 @@ export function PublicView() {
               This public dashboard doesn't exist or is no longer shared.
             </p>
           </div>
+        )}
+
+        {!loading && !notFound && error && (
+          <div className="alert alert--error">{error}</div>
         )}
 
         {!loading && !notFound && data && (

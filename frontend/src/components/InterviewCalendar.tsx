@@ -32,11 +32,25 @@ function toYMD(d: Date): string {
 
 function parseTime(time: string): number {
   if (!time) return Infinity;
-  const match = time.match(/(\d+):(\d+)\s*(AM|PM)/i);
-  if (!match) return Infinity;
-  let hours = parseInt(match[1], 10);
-  const mins = parseInt(match[2], 10);
-  const meridiem = match[3].toUpperCase();
+  const trimmed = time.trim();
+
+  // 24h HH:MM format from native time input.
+  const h24 = trimmed.match(/^(\d{1,2}):(\d{2})$/);
+  if (h24) {
+    const hours = parseInt(h24[1], 10);
+    const mins = parseInt(h24[2], 10);
+    if (hours >= 0 && hours <= 23 && mins >= 0 && mins <= 59) {
+      return hours * 60 + mins;
+    }
+    return Infinity;
+  }
+
+  // Legacy AM/PM format.
+  const ampm = trimmed.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  if (!ampm) return Infinity;
+  let hours = parseInt(ampm[1], 10);
+  const mins = parseInt(ampm[2], 10);
+  const meridiem = ampm[3].toUpperCase();
   if (meridiem === 'PM' && hours !== 12) hours += 12;
   if (meridiem === 'AM' && hours === 12) hours = 0;
   return hours * 60 + mins;

@@ -18,11 +18,9 @@ A self-hosted job application tracker built with React, AWS Lambda, DynamoDB, an
 ## Architecture
 
 ```
-Browser → CloudFront (jobtrail.dev)
-             ├── /           → S3 static site (React SPA)
-             └── /api/*      → API Gateway HTTP API
-                               └── Lambda functions (Node.js 18)
-                                     └── DynamoDB (single-table design)
+Browser → CloudFront (jobtrail.dev) → S3 static site (React SPA)
+Browser → API Gateway HTTP API      → Lambda functions (Node.js 18)
+                                      └── DynamoDB (single-table design)
 
 Auth: Amazon Cognito User Pools (JWT tokens)
 DNS:  Route 53 hosted zone

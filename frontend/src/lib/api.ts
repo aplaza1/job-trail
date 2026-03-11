@@ -3,8 +3,30 @@ import type { Application, Interview, Profile, PublicDashboard } from '../types'
 
 const BASE_URL = import.meta.env.VITE_API_URL || '';
 
-async function request<T>(method: string, path: string, body?: unknown): Promise<T> {
-  const token = await getIdToken();
+export class ApiError extends Error {
+  status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+  }
+}
+
+async function toApiError(res: Response): Promise<ApiError> {
+  const err = await res.json().catch(() => ({ message: res.statusText }));
+  const message = (err as { message?: string }).message || 'Request failed';
+  return new ApiError(res.status, message);
+}
+
+async function request<T>(
+  method: string,
+  path: string,
+  body?: unknown,
+  options?: { requiresAuth?: boolean }
+): Promise<T> {
+  const requiresAuth = options?.requiresAuth ?? true;
+  const token = requiresAuth ? await getIdToken() : null;
   const res = await fetch(`${BASE_URL}${path}`, {
     method,
     headers: {
@@ -14,8 +36,7 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
     body: body ? JSON.stringify(body) : undefined,
   });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({ message: res.statusText }));
-    throw new Error((err as { message?: string }).message || 'Request failed');
+    throw await toApiError(res);
   }
   if (res.status === 204) return undefined as T;
   return res.json();
@@ -43,6 +64,6 @@ export const api = {
   updateProfile: (data: Partial<Profile>) => request<Profile>('PUT', '/profile', data),
 
   // Public
-  getPublicDashboard: (shareToken: string): Promise<PublicDashboard> =>
-    fetch(`${BASE_URL}/public/${shareToken}`).then(r => r.json()),
+  getPublicDashboard: (shareToken: string) =>
+    request<PublicDashboard>('GET', `/public/${shareToken}`, undefined, { requiresAuth: false }),
 };
