@@ -1,8 +1,10 @@
 # Job Trail 🛤️
 
-A self-hosted job application tracker built with React, AWS Lambda, DynamoDB, and CloudFront. Track applications, schedule interviews, and share your job search progress — all on your own infrastructure.
+A free job application tracker built with React, AWS Lambda, DynamoDB, and CloudFront. Track applications, schedule interviews, and share your job search progress in one place.
 
-**Live demo**: https://jobtrail.dev
+**Free public site**: https://jobtrail.dev
+
+Job Trail is open source for transparency, community contributions, and anyone who wants to run their own version.
 
 ---
 
@@ -15,7 +17,7 @@ A self-hosted job application tracker built with React, AWS Lambda, DynamoDB, an
 - **Custom domain** — served via CloudFront with ACM certificate
 - **Fully serverless** — Lambda + DynamoDB, no servers to manage
 
-## Architecture
+## Architecture (jobtrail.dev deployment)
 
 ```
 Browser → CloudFront (jobtrail.dev) → S3 static site (React SPA)
