@@ -1282,6 +1282,18 @@ img, svg { display: block; max-width: 100%; }
   opacity: 1;
 }
 
+.external-link-icon {
+  display: inline-block;
+  margin-left: 0.3rem;
+  vertical-align: middle;
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.company-link:hover .external-link-icon {
+  opacity: 1;
+}
+
 .tr-clickable {
   cursor: pointer;
 }
