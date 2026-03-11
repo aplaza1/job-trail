@@ -15,7 +15,8 @@ export class HostingStack extends cdk.Stack {
     const siteBucket = new s3.Bucket(this, 'SiteBucket', {
       bucketName: `job-trail-frontend-${this.account}`,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
-      removalPolicy: cdk.RemovalPolicy.RETAIN,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
     });
 
     this.distribution = new cloudfront.Distribution(this, 'SiteDistribution', {
