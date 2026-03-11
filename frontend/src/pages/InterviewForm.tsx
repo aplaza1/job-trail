@@ -23,7 +23,8 @@ export function InterviewForm({ editId, onClose, onSaved }: Props) {
   const [title,     setTitle]     = useState('');
   const [type,      setType]      = useState('Recruiter Call');
   const [date,      setDate]      = useState(todayISO());
-  const [time,      setTime]      = useState('TBD');
+  const [time,      setTime]      = useState('');
+  const [isTbd,     setIsTbd]     = useState(true);
   const [tentative, setTentative] = useState(false);
   const [notes,     setNotes]     = useState('');
 
@@ -41,7 +42,8 @@ export function InterviewForm({ editId, onClose, onSaved }: Props) {
         setTitle(iv.title ?? '');
         setType(iv.type);
         setDate(iv.date);
-        setTime(iv.time);
+        setIsTbd(iv.time === 'TBD');
+        setTime(iv.time === 'TBD' ? '' : iv.time);
         setTentative(iv.tentative);
         setNotes(iv.notes ?? '');
       })
@@ -59,7 +61,7 @@ export function InterviewForm({ editId, onClose, onSaved }: Props) {
         title:   title.trim() || undefined,
         type,
         date,
-        time:    time.trim() || 'TBD',
+        time:    isTbd ? 'TBD' : time,
         tentative,
         notes:   notes.trim() || undefined,
       };
@@ -112,8 +114,17 @@ export function InterviewForm({ editId, onClose, onSaved }: Props) {
       <div className="form-row">
         <div className="form-group">
           <label className="form-label" htmlFor="iv-time">Time</label>
-          <input id="iv-time" type="text" className="form-input" value={time}
-            onChange={e => setTime(e.target.value)} placeholder="e.g. 2:00 PM or TBD" />
+          {isTbd ? (
+            <input id="iv-time" type="text" className="form-input" value="TBD" disabled />
+          ) : (
+            <input id="iv-time" type="time" className="form-input" value={time}
+              onChange={e => setTime(e.target.value)} required />
+          )}
+          <label className="checkbox-label" style={{ marginTop: '0.4rem' }}>
+            <input type="checkbox" className="checkbox-input" checked={isTbd}
+              onChange={e => setIsTbd(e.target.checked)} />
+            <span className="checkbox-text">Time TBD</span>
+          </label>
         </div>
         <div className="form-group form-group--middle">
           <label className="checkbox-label">
