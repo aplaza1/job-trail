@@ -22,6 +22,8 @@ export interface Interview {
   date: string; // YYYY-MM-DD
   time: string; // "HH:MM AM/PM" | "TBD"
   tentative: boolean;
+  notes?: string;
+  applicationId?: string;
 }
 
 export interface Profile {

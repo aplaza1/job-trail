@@ -13,6 +13,7 @@ interface Interview {
   time: string;      // "HH:MM AM/PM" | "TBD"
   tentative: boolean;
   notes?: string;
+  applicationId?: string;
 }
 
 function toInterview(item: Record<string, unknown>): Interview {
@@ -49,6 +50,8 @@ export const handler = async (event: APIGatewayProxyEventV2WithJWTAuthorizer): P
         time: body.time,
         tentative: body.tentative,
         ...(body.title && { title: body.title }),
+        ...(body.notes && { notes: body.notes }),
+        ...(body.applicationId && { applicationId: body.applicationId }),
       };
       await putItem(interview as unknown as Record<string, unknown>);
       return created(toInterview(interview as unknown as Record<string, unknown>));
