@@ -18,7 +18,7 @@ interface Interview {
 function toInterview(item: Record<string, unknown>): Interview {
   // Strip DynamoDB PK/SK keys
   const { PK, SK, ...rest } = item;
-  return rest as Interview;
+  return rest as unknown as Interview;
 }
 
 export const handler = async (event: APIGatewayProxyEventV2WithJWTAuthorizer): Promise<APIGatewayProxyResultV2> => {
@@ -51,8 +51,8 @@ export const handler = async (event: APIGatewayProxyEventV2WithJWTAuthorizer): P
         ...(body.title && { title: body.title }),
         ...(body.notes && { notes: body.notes }),
       };
-      await putItem(interview);
-      return created(toInterview(interview));
+      await putItem(interview as unknown as Record<string, unknown>);
+      return created(toInterview(interview as unknown as Record<string, unknown>));
     }
 
     if (method === 'PUT' && id) {

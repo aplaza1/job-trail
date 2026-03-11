@@ -20,7 +20,7 @@ interface Application {
 function toApplication(item: Record<string, unknown>): Application {
   // Strip DynamoDB PK/SK keys
   const { PK, SK, ...rest } = item;
-  return rest as Application;
+  return rest as unknown as Application;
 }
 
 export const handler = async (event: APIGatewayProxyEventV2WithJWTAuthorizer): Promise<APIGatewayProxyResultV2> => {
@@ -55,8 +55,8 @@ export const handler = async (event: APIGatewayProxyEventV2WithJWTAuthorizer): P
         ...(body.link && { link: body.link }),
         ...(body.notes && { notes: body.notes }),
       };
-      await putItem(app);
-      return created(toApplication(app));
+      await putItem(app as unknown as Record<string, unknown>);
+      return created(toApplication(app as unknown as Record<string, unknown>));
     }
 
     if (method === 'PUT' && id) {
