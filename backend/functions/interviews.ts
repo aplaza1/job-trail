@@ -49,7 +49,6 @@ export const handler = async (event: APIGatewayProxyEventV2WithJWTAuthorizer): P
         time: body.time,
         tentative: body.tentative,
         ...(body.title && { title: body.title }),
-        ...(body.notes && { notes: body.notes }),
       };
       await putItem(interview as unknown as Record<string, unknown>);
       return created(toInterview(interview as unknown as Record<string, unknown>));

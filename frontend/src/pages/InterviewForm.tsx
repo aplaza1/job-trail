@@ -24,9 +24,8 @@ export function InterviewForm({ editId, onClose, onSaved }: Props) {
   const [type,      setType]      = useState('Recruiter Call');
   const [date,      setDate]      = useState(todayISO());
   const [time,      setTime]      = useState('');
-  const [isTbd,     setIsTbd]     = useState(true);
+  const [isTbd,     setIsTbd]     = useState(false);
   const [tentative, setTentative] = useState(false);
-  const [notes,     setNotes]     = useState('');
 
   const [loading, setLoading] = useState(isEdit);
   const [saving,  setSaving]  = useState(false);
@@ -45,7 +44,6 @@ export function InterviewForm({ editId, onClose, onSaved }: Props) {
         setIsTbd(iv.time === 'TBD');
         setTime(iv.time === 'TBD' ? '' : iv.time);
         setTentative(iv.tentative);
-        setNotes(iv.notes ?? '');
       })
       .catch(e => setError((e as Error).message))
       .finally(() => setLoading(false));
@@ -63,7 +61,6 @@ export function InterviewForm({ editId, onClose, onSaved }: Props) {
         date,
         time:    isTbd ? 'TBD' : time,
         tentative,
-        notes:   notes.trim() || undefined,
       };
       if (isEdit && editId) {
         await api.updateInterview(editId, data);
@@ -134,13 +131,6 @@ export function InterviewForm({ editId, onClose, onSaved }: Props) {
           </label>
           <p className="form-hint">Tentative interviews show in amber on the calendar</p>
         </div>
-      </div>
-
-      <div className="form-group">
-        <label className="form-label" htmlFor="iv-notes">Notes</label>
-        <textarea id="iv-notes" className="form-textarea" value={notes} rows={3}
-          onChange={e => setNotes(e.target.value)}
-          placeholder="Prep notes, interviewer name, topics to review…" />
       </div>
 
       <div className="form-actions">

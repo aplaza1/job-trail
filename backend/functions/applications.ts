@@ -53,7 +53,6 @@ export const handler = async (event: APIGatewayProxyEventV2WithJWTAuthorizer): P
         dateApplied: body.dateApplied,
         lastUpdated: now,
         ...(body.link && { link: body.link }),
-        ...(body.notes && { notes: body.notes }),
       };
       await putItem(app as unknown as Record<string, unknown>);
       return created(toApplication(app as unknown as Record<string, unknown>));

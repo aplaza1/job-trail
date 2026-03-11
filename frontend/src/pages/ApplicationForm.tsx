@@ -33,7 +33,6 @@ export function ApplicationForm({ editId, onClose, onSaved }: Props) {
   const [method,      setMethod]      = useState<ApplicationMethod>('LinkedIn');
   const [dateApplied, setDateApplied] = useState(todayISO());
   const [link,        setLink]        = useState('');
-  const [notes,       setNotes]       = useState('');
 
   const [loading, setLoading] = useState(isEdit);
   const [saving,  setSaving]  = useState(false);
@@ -51,7 +50,6 @@ export function ApplicationForm({ editId, onClose, onSaved }: Props) {
         setMethod(app.method);
         setDateApplied(app.dateApplied);
         setLink(app.link ?? '');
-        setNotes(app.notes ?? '');
       })
       .catch(e => setError((e as Error).message))
       .finally(() => setLoading(false));
@@ -69,7 +67,6 @@ export function ApplicationForm({ editId, onClose, onSaved }: Props) {
         method,
         dateApplied,
         link:  link.trim()  || undefined,
-        notes: notes.trim() || undefined,
       };
       if (isEdit && editId) {
         await api.updateApplication(editId, data);
@@ -130,12 +127,6 @@ export function ApplicationForm({ editId, onClose, onSaved }: Props) {
           <input id="app-link" type="url" className="form-input" value={link}
             onChange={e => setLink(e.target.value)} placeholder="https://…" />
         </div>
-      </div>
-
-      <div className="form-group">
-        <label className="form-label" htmlFor="app-notes">Notes</label>
-        <textarea id="app-notes" className="form-textarea" value={notes} rows={3}
-          onChange={e => setNotes(e.target.value)} placeholder="Any notes about this application…" />
       </div>
 
       <div className="form-actions">
