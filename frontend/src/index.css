@@ -526,6 +526,7 @@ img, svg { display: block; max-width: 100%; }
   border: 1px solid transparent;
   border-radius: 6px;
   padding: 0;
+  color: var(--text-secondary, #6b7280);
   width: 30px;
   height: 30px;
   display: inline-flex;
@@ -1296,8 +1297,9 @@ img, svg { display: block; max-width: 100%; }
 .row-link-btn:hover {
   text-decoration-color: currentColor;
 }
-.action-btn--interview {
-  color: var(--accent, #6366f1);
+.action-btn--interview:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
 }
 
 /* Hamburger menu */
