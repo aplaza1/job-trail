@@ -71,15 +71,11 @@ export function ApplicationsTable({ applications, onEdit, onDelete, onViewInterv
               </thead>
               <tbody>
                 {visible.map(app => (
-                  <tr
-                    key={app.id}
-                    className={onViewInterviews ? 'tr-clickable' : undefined}
-                    onClick={() => onViewInterviews?.(app)}
-                  >
+                  <tr key={app.id}>
                     <td className="td-company">{app.company}</td>
                     <td className="td-title">
                       {app.link ? (
-                        <a href={app.link} target="_blank" rel="noreferrer" className="company-link" onClick={e => e.stopPropagation()}>
+                        <a href={app.link} target="_blank" rel="noreferrer" className="company-link">
                           {app.title}
                           <svg className="external-link-icon" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
@@ -95,7 +91,7 @@ export function ApplicationsTable({ applications, onEdit, onDelete, onViewInterv
                     <td className="td-method">{app.method}</td>
                     <td className="td-date">{formatDate(app.dateApplied)}</td>
                     {showActions && (
-                      <td className="td-actions" onClick={e => e.stopPropagation()}>
+                      <td className="td-actions">
                         <div className="actions-group">
                           {onEdit && (
                             <button className="action-btn action-btn--edit" onClick={() => onEdit(app.id)} title="Edit">

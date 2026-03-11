@@ -1294,13 +1294,6 @@ img, svg { display: block; max-width: 100%; }
   opacity: 1;
 }
 
-.tr-clickable {
-  cursor: pointer;
-}
-
-.tr-clickable:hover td {
-  background: var(--surface-2, #f3f4f6);
-}
 
 .row-link-btn {
   background: none;
