@@ -479,6 +479,52 @@ img, svg { display: block; max-width: 100%; }
   overflow-x: auto;
 }
 
+.apps-mobile-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
+}
+
+.app-mobile-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  padding: 0.75rem;
+}
+
+.app-mobile-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.app-mobile-company {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.app-mobile-role {
+  color: var(--text-muted);
+  margin-bottom: 0.55rem;
+  line-height: 1.4;
+}
+
+.app-mobile-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.app-mobile-actions {
+  margin-top: 0.6rem;
+}
+
 .apps-table {
   width: 100%;
   border-collapse: collapse;
