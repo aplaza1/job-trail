@@ -42,6 +42,10 @@ jobs:
         working-directory: backend
         run: npm run build
 
+      - name: CDK Bootstrap
+        working-directory: infra
+        run: npx cdk bootstrap
+
       - name: CDK Deploy
         working-directory: infra
         run: npx cdk deploy --all --require-approval never --outputs-file cdk-outputs.json
