@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Spinner } from './components/Spinner';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Landing } from './pages/Landing';
 import { Login } from './pages/Login';
@@ -18,7 +19,7 @@ function RootRedirect() {
       .catch(() => setStatus('unauth'));
   }, []);
 
-  if (status === 'loading') return null;
+  if (status === 'loading') return <Spinner />;
   if (status === 'auth') return <Navigate to="/dashboard" replace />;
   return <Landing />;
 }
