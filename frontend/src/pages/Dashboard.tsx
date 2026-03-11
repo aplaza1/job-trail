@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Spinner } from '../components/Spinner';
 import { Layout } from '../components/Layout';
 import { Modal } from '../components/Modal';
 import { StatsCounter } from '../components/StatsCounter';
@@ -72,7 +73,7 @@ export function Dashboard() {
         {hasError && <div className="alert alert--error">{appsError || ivsError}</div>}
 
         {isLoading ? (
-          <div className="loading-state">Loading your data…</div>
+          <Spinner />
         ) : (
           <>
             <StatsCounter applications={applications} />

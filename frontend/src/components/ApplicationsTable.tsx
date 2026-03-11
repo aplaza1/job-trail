@@ -77,15 +77,19 @@ export function ApplicationsTable({ applications, onEdit, onDelete, onViewInterv
                         <button className="row-link-btn" onClick={() => onViewInterviews(app)}>
                           {app.company}
                         </button>
-                      ) : app.link ? (
-                        <a href={app.link} target="_blank" rel="noreferrer" className="company-link">
-                          {app.company}
-                        </a>
                       ) : (
                         app.company
                       )}
                     </td>
-                    <td className="td-title">{app.title}</td>
+                    <td className="td-title">
+                      {app.link ? (
+                        <a href={app.link} target="_blank" rel="noreferrer" className="company-link">
+                          {app.title}
+                        </a>
+                      ) : (
+                        app.title
+                      )}
+                    </td>
                     <td><StatusBadge status={app.status} /></td>
                     <td className="td-method">{app.method}</td>
                     <td className="td-date">{formatDate(app.dateApplied)}</td>

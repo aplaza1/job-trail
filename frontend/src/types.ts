@@ -11,7 +11,6 @@ export interface Application {
   dateApplied: string; // YYYY-MM-DD
   lastUpdated: string;
   link?: string;
-  notes?: string;
 }
 
 export interface Interview {
