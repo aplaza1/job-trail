@@ -12,15 +12,18 @@ const INTERVIEW_TYPES = [
 
 interface Props {
   editId?: string;
+  applicationId?: string;
+  prefillCompany?: string;
+  prefillTitle?: string;
   onClose: () => void;
   onSaved: () => void;
 }
 
-export function InterviewForm({ editId, onClose, onSaved }: Props) {
+export function InterviewForm({ editId, applicationId, prefillCompany, prefillTitle, onClose, onSaved }: Props) {
   const isEdit = !!editId;
 
-  const [company,   setCompany]   = useState('');
-  const [title,     setTitle]     = useState('');
+  const [company,   setCompany]   = useState(prefillCompany ?? '');
+  const [title,     setTitle]     = useState(prefillTitle ?? '');
   const [type,      setType]      = useState('Recruiter Call');
   const [date,      setDate]      = useState(todayISO());
   const [time,      setTime]      = useState('');
@@ -64,6 +67,7 @@ export function InterviewForm({ editId, onClose, onSaved }: Props) {
         time:    isTbd ? 'TBD' : time,
         tentative,
         notes:   notes.trim() || undefined,
+        ...(applicationId ? { applicationId } : {}),
       };
       if (isEdit && editId) {
         await api.updateInterview(editId, data);
