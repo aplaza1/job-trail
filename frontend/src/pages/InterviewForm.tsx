@@ -91,12 +91,12 @@ export function InterviewForm({ editId, applicationId, prefillCompany, prefillTi
         <div className="form-group">
           <label className="form-label" htmlFor="iv-company">Company *</label>
           <input id="iv-company" type="text" className="form-input" value={company}
-            onChange={e => setCompany(e.target.value)} placeholder="Acme Corp" required />
+            onChange={e => setCompany(e.target.value)} placeholder="Dunder Mifflin" required />
         </div>
         <div className="form-group">
           <label className="form-label" htmlFor="iv-title">Job Title</label>
           <input id="iv-title" type="text" className="form-input" value={title}
-            onChange={e => setTitle(e.target.value)} placeholder="Optional" />
+            onChange={e => setTitle(e.target.value)} placeholder="Assistant Regional Manager" />
         </div>
       </div>
 

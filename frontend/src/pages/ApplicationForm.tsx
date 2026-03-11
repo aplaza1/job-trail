@@ -90,12 +90,12 @@ export function ApplicationForm({ editId, onClose, onSaved }: Props) {
         <div className="form-group">
           <label className="form-label" htmlFor="app-company">Company *</label>
           <input id="app-company" type="text" className="form-input" value={company}
-            onChange={e => setCompany(e.target.value)} placeholder="Acme Corp" required />
+            onChange={e => setCompany(e.target.value)} placeholder="Dunder Mifflin" required />
         </div>
         <div className="form-group">
           <label className="form-label" htmlFor="app-title">Job Title *</label>
           <input id="app-title" type="text" className="form-input" value={title}
-            onChange={e => setTitle(e.target.value)} placeholder="Software Engineer" required />
+            onChange={e => setTitle(e.target.value)} placeholder="Assistant Regional Manager" required />
         </div>
       </div>
 
