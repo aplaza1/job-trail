@@ -68,8 +68,7 @@ Base URL: `https://<api-id>.execute-api.us-west-2.amazonaws.com`
   "method": "LinkedIn | Company Website | Referral | Indeed | Glassdoor | Recruiter | Other",
   "dateApplied": "YYYY-MM-DD",
   "lastUpdated": "YYYY-MM-DD",
-  "link": "https://...",
-  "notes": "Optional notes"
+  "link": "https://..."
 }
 ```
 
@@ -90,9 +89,9 @@ Base URL: `https://<api-id>.execute-api.us-west-2.amazonaws.com`
   "title": "Software Engineer",
   "type": "Recruiter Call | Phone Screen | Tech Screen | ...",
   "date": "YYYY-MM-DD",
-  "time": "HH:MM AM/PM | TBD",
+  "time": "HH:MM | TBD",
   "tentative": false,
-  "notes": "Optional notes"
+  "applicationId": "uuid (optional, links to a job application)"
 }
 ```
 

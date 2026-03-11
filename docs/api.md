@@ -56,8 +56,7 @@ Authorization: Bearer <id_token>
     "method": "LinkedIn",
     "dateApplied": "2024-03-01",
     "lastUpdated": "2024-03-01",
-    "link": "https://acme.com/careers/123",
-    "notes": "Referred by Jane"
+    "link": "https://acme.com/careers/123"
   }
 ]
 ```
@@ -85,14 +84,13 @@ Content-Type: application/json
   "status": "applied",
   "method": "LinkedIn",
   "dateApplied": "2024-03-01",
-  "link": "https://acme.com/careers/123",
-  "notes": "Referred by Jane"
+  "link": "https://acme.com/careers/123"
 }
 ```
 
 **Required fields**: `company`, `title`, `status`, `method`, `dateApplied`
 
-**Optional fields**: `link`, `notes`
+**Optional fields**: `link`
 
 **`status` values**
 
@@ -120,8 +118,7 @@ Content-Type: application/json
   "method": "LinkedIn",
   "dateApplied": "2024-03-01",
   "lastUpdated": "2024-03-01",
-  "link": "https://acme.com/careers/123",
-  "notes": "Referred by Jane"
+  "link": "https://acme.com/careers/123"
 }
 ```
 
@@ -146,8 +143,7 @@ Content-Type: application/json
 
 ```json
 {
-  "status": "interviewing",
-  "notes": "Phone screen scheduled"
+  "status": "interviewing"
 }
 ```
 
@@ -165,8 +161,7 @@ Returns the full updated application object.
   "method": "LinkedIn",
   "dateApplied": "2024-03-01",
   "lastUpdated": "2024-03-10",
-  "link": "https://acme.com/careers/123",
-  "notes": "Phone screen scheduled"
+  "link": "https://acme.com/careers/123"
 }
 ```
 
@@ -227,7 +222,7 @@ Authorization: Bearer <id_token>
     "date": "2024-03-15",
     "time": "10:00 AM",
     "tentative": false,
-    "notes": "With hiring manager"
+    "applicationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
   }
 ]
 ```
@@ -256,25 +251,29 @@ Content-Type: application/json
   "date": "2024-03-15",
   "time": "10:00 AM",
   "tentative": false,
-  "notes": "With hiring manager"
+  "applicationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 }
 ```
 
 **Required fields**: `company`, `type`, `date`, `time`, `tentative`
 
-**Optional fields**: `title`, `notes`
+**Optional fields**: `title`, `applicationId`
 
-**`type` common values** (free-form string, not enum-validated server-side)
+**`type` values**
 
-`Recruiter Call` | `Phone Screen` | `Tech Screen` | `Technical Interview` | `System Design` | `Behavioral` | `Final Round` | `Offer Call`
+`Recruiter Call` | `Phone Screen` | `Tech Screen` | `2nd Tech Screen` | `Hiring Manager` | `System Design` | `Take-Home Project` | `Onsite` | `Panel` | `Final Round` | `Other`
 
 **`time` format**
 
-Either a 12-hour time string (`"10:00 AM"`, `"2:30 PM"`) or the literal string `"TBD"` when the time has not been confirmed.
+Either a 24-hour time string (`"10:00"`, `"14:30"`) or the literal string `"TBD"` when the time has not been confirmed.
 
 **`tentative`**
 
 `true` when the interview is not yet confirmed; `false` when confirmed.
+
+**`applicationId`**
+
+Optional UUID of a job application to link this interview to. When set, the interview appears in the job's interview history.
 
 **Response** `201 Created`
 
@@ -286,9 +285,9 @@ Either a 12-hour time string (`"10:00 AM"`, `"2:30 PM"`) or the literal string `
   "title": "Software Engineer",
   "type": "Phone Screen",
   "date": "2024-03-15",
-  "time": "10:00 AM",
+  "time": "10:00",
   "tentative": false,
-  "notes": "With hiring manager"
+  "applicationId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 }
 ```
 
@@ -314,7 +313,7 @@ Content-Type: application/json
 ```json
 {
   "tentative": false,
-  "time": "2:00 PM"
+  "time": "14:00"
 }
 ```
 
@@ -330,9 +329,8 @@ Returns the full updated interview object.
   "title": "Software Engineer",
   "type": "Phone Screen",
   "date": "2024-03-15",
-  "time": "2:00 PM",
-  "tentative": false,
-  "notes": "With hiring manager"
+  "time": "14:00",
+  "tentative": false
 }
 ```
 
