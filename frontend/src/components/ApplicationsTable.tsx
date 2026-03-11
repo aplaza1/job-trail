@@ -70,16 +70,16 @@ export function ApplicationsTable({ applications, onEdit, onDelete }: Props) {
               <tbody>
                 {visible.map(app => (
                   <tr key={app.id}>
-                    <td className="td-company">
+                    <td className="td-company">{app.company}</td>
+                    <td className="td-title">
                       {app.link ? (
                         <a href={app.link} target="_blank" rel="noreferrer" className="company-link">
-                          {app.company}
+                          {app.title}
                         </a>
                       ) : (
-                        app.company
+                        app.title
                       )}
                     </td>
-                    <td className="td-title">{app.title}</td>
                     <td><StatusBadge status={app.status} /></td>
                     <td className="td-method">{app.method}</td>
                     <td className="td-date">{formatDate(app.dateApplied)}</td>
