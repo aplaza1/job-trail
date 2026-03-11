@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { getCurrentUser } from '../lib/auth';
+import { Spinner } from './Spinner';
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const [status, setStatus] = useState<'loading' | 'auth' | 'unauth'>('loading');
@@ -11,7 +12,7 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
       .catch(() => setStatus('unauth'));
   }, []);
 
-  if (status === 'loading') return <div className="page-wrapper"><p>Loading...</p></div>;
+  if (status === 'loading') return <Spinner />;
   if (status === 'unauth') return <Navigate to="/login" replace />;
   return <>{children}</>;
 }
