@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { signUp, confirmSignUp } from '../lib/auth';
+import { signUp, confirmSignUp, signIn } from '../lib/auth';
 import { Layout } from '../components/Layout';
 
 type Step = 'register' | 'verify';
@@ -34,7 +34,8 @@ export function Signup() {
     setLoading(true);
     try {
       await confirmSignUp({ username: email, confirmationCode: code });
-      navigate('/login', { state: { message: 'Account created! Please sign in.' } });
+      await signIn({ username: email, password });
+      navigate('/dashboard');
     } catch (err) {
       setError((err as Error).message || 'Verification failed. Please try again.');
     } finally {
