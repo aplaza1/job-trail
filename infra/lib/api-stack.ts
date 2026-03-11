@@ -83,7 +83,7 @@ export class ApiStack extends cdk.Stack {
           apigateway.CorsHttpMethod.DELETE,
           apigateway.CorsHttpMethod.OPTIONS,
         ],
-        allowOrigins: ['*'],
+        allowOrigins: ['https://jobtrail.dev'],
       },
     });
 

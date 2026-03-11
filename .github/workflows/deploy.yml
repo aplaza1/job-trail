@@ -44,7 +44,10 @@ jobs:
 
       - name: CDK Bootstrap
         working-directory: infra
-        run: npx cdk bootstrap
+        run: |
+          AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          npx cdk bootstrap aws://${AWS_ACCOUNT_ID}/us-west-2
+          npx cdk bootstrap aws://${AWS_ACCOUNT_ID}/us-east-1
 
       - name: CDK Deploy
         working-directory: infra
