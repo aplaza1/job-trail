@@ -71,19 +71,15 @@ export function ApplicationsTable({ applications, onEdit, onDelete, onViewInterv
               </thead>
               <tbody>
                 {visible.map(app => (
-                  <tr key={app.id}>
-                    <td className="td-company">
-                      {onViewInterviews ? (
-                        <button className="row-link-btn" onClick={() => onViewInterviews(app)}>
-                          {app.company}
-                        </button>
-                      ) : (
-                        app.company
-                      )}
-                    </td>
+                  <tr
+                    key={app.id}
+                    className={onViewInterviews ? 'tr-clickable' : undefined}
+                    onClick={() => onViewInterviews?.(app)}
+                  >
+                    <td className="td-company">{app.company}</td>
                     <td className="td-title">
                       {app.link ? (
-                        <a href={app.link} target="_blank" rel="noreferrer" className="company-link">
+                        <a href={app.link} target="_blank" rel="noreferrer" className="company-link" onClick={e => e.stopPropagation()}>
                           {app.title}
                         </a>
                       ) : (
@@ -94,7 +90,7 @@ export function ApplicationsTable({ applications, onEdit, onDelete, onViewInterv
                     <td className="td-method">{app.method}</td>
                     <td className="td-date">{formatDate(app.dateApplied)}</td>
                     {showActions && (
-                      <td className="td-actions">
+                      <td className="td-actions" onClick={e => e.stopPropagation()}>
                         <div className="actions-group">
                           {onEdit && (
                             <button className="action-btn action-btn--edit" onClick={() => onEdit(app.id)} title="Edit">
