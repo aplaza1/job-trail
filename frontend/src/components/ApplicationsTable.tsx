@@ -38,7 +38,7 @@ function formatDate(dateStr: string): string {
   return `${months[parseInt(month, 10) - 1]} ${parseInt(day, 10)}, ${year}`;
 }
 
-export function ApplicationsTable({ applications, onEdit, onDelete, onViewInterviews, onAddInterview }: Props) {
+export function ApplicationsTable({ applications, onEdit, onDelete, onViewInterviews: _onViewInterviews, onAddInterview }: Props) {
   const [page, setPage] = useState(0);
   const pageSize = usePageSize();
 
