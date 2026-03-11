@@ -31,7 +31,7 @@ function toYMD(d: Date): string {
 }
 
 function parseTime(time: string): number {
-  if (!time || time.toUpperCase() === 'TBD') return Infinity;
+  if (!time) return Infinity;
   const match = time.match(/(\d+):(\d+)\s*(AM|PM)/i);
   if (!match) return Infinity;
   let hours = parseInt(match[1], 10);
@@ -43,7 +43,7 @@ function parseTime(time: string): number {
 }
 
 function formatTime(time: string): string {
-  if (!time || time.toUpperCase() === 'TBD') return 'TBD';
+  if (!time) return '';
   // Already in AM/PM format (legacy data)
   if (/AM|PM/i.test(time)) {
     return time.replace(/\s*(AM|PM)/i, (_, m) => m.toUpperCase());

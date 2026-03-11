@@ -149,7 +149,7 @@ app.post('/interviews', (req: Request, res: Response) => {
     ...(body.title ? { title: body.title } : {}),
     type: body.type,
     date: body.date,
-    time: body.time || 'TBD',
+    time: body.time,
     tentative: body.tentative ?? false,
     ...(body.notes ? { notes: body.notes } : {}),
   };

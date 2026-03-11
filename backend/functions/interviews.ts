@@ -10,7 +10,7 @@ interface Interview {
   title?: string;
   type: string;
   date: string;      // YYYY-MM-DD
-  time: string;      // "HH:MM AM/PM" | "TBD"
+  time: string;      // "HH:MM"
   tentative: boolean;
   notes?: string;
   applicationId?: string;
