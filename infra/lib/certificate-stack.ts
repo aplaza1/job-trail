@@ -3,15 +3,17 @@ import * as acm from 'aws-cdk-lib/aws-certificatemanager';
 import * as route53 from 'aws-cdk-lib/aws-route53';
 import { Construct } from 'constructs';
 
+interface CertificateStackProps extends cdk.StackProps {
+  hostedZone: route53.IHostedZone;
+}
+
 export class CertificateStack extends cdk.Stack {
   public readonly certificate: acm.Certificate;
 
-  constructor(scope: Construct, id: string, props: cdk.StackProps) {
+  constructor(scope: Construct, id: string, props: CertificateStackProps) {
     super(scope, id, props);
 
-    const hostedZone = route53.HostedZone.fromLookup(this, 'HostedZone', {
-      domainName: 'jobtrail.dev',
-    });
+    const { hostedZone } = props;
 
     this.certificate = new acm.Certificate(this, 'SiteCertificate', {
       domainName: 'jobtrail.dev',

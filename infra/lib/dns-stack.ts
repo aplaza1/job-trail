@@ -5,6 +5,7 @@ import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
 import { Construct } from 'constructs';
 
 interface DnsStackProps extends cdk.StackProps {
+  hostedZone: route53.IHostedZone;
   distribution: cloudfront.Distribution;
 }
 
@@ -12,11 +13,7 @@ export class DnsStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: DnsStackProps) {
     super(scope, id, props);
 
-    const { distribution } = props;
-
-    const hostedZone = route53.HostedZone.fromLookup(this, 'HostedZone', {
-      domainName: 'jobtrail.dev',
-    });
+    const { hostedZone, distribution } = props;
 
     new route53.ARecord(this, 'ApexARecord', {
       zone: hostedZone,

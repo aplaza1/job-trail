@@ -5,6 +5,7 @@ import { DataStack } from '../lib/data-stack';
 import { AuthStack } from '../lib/auth-stack';
 import { ApiStack } from '../lib/api-stack';
 import { HostingStack } from '../lib/hosting-stack';
+import { HostedZoneStack } from '../lib/hosted-zone-stack';
 import { CertificateStack } from '../lib/certificate-stack';
 import { DnsStack } from '../lib/dns-stack';
 
@@ -26,9 +27,12 @@ const apiStack = new ApiStack(app, 'JobTrailApiStack', {
   userPoolClient: authStack.userPoolClient,
 });
 
+const hostedZoneStack = new HostedZoneStack(app, 'JobTrailHostedZoneStack', { env });
+
 const certStack = new CertificateStack(app, 'JobTrailCertStack', {
   env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: 'us-east-1' },
   crossRegionReferences: true,
+  hostedZone: hostedZoneStack.hostedZone,
 });
 
 const hostingStack = new HostingStack(app, 'JobTrailHostingStack', {
@@ -39,5 +43,6 @@ const hostingStack = new HostingStack(app, 'JobTrailHostingStack', {
 
 new DnsStack(app, 'JobTrailDnsStack', {
   env,
+  hostedZone: hostedZoneStack.hostedZone,
   distribution: hostingStack.distribution,
 });
