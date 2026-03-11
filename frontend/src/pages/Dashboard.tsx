@@ -12,32 +12,42 @@ import { api } from '../lib/api';
 
 type AppModal  = { open: true; editId?: string } | { open: false };
 type IvModal   = { open: true; editId?: string } | { open: false };
+type ConfirmModal = { open: true; message: string; onConfirm: () => void } | { open: false };
 
 export function Dashboard() {
   const { applications, loading: appsLoading, error: appsError, refetch: refetchApps } = useApplications();
   const { interviews,   loading: ivsLoading,  error: ivsError,  refetch: refetchIvs  } = useInterviews();
 
-  const [appModal, setAppModal] = useState<AppModal>({ open: false });
-  const [ivModal,  setIvModal]  = useState<IvModal>({ open: false });
+  const [appModal,     setAppModal]     = useState<AppModal>({ open: false });
+  const [ivModal,      setIvModal]      = useState<IvModal>({ open: false });
+  const [confirmModal, setConfirmModal] = useState<ConfirmModal>({ open: false });
+  const [deleteError,  setDeleteError]  = useState<string | null>(null);
 
-  const handleDeleteApplication = async (id: string) => {
-    if (!window.confirm('Delete this application?')) return;
-    try {
-      await api.deleteApplication(id);
-      refetchApps();
-    } catch (err) {
-      alert((err as Error).message || 'Failed to delete');
-    }
+  const confirm = (message: string, onConfirm: () => void) =>
+    setConfirmModal({ open: true, message, onConfirm });
+
+  const handleDeleteApplication = (id: string) => {
+    confirm('Delete this application?', async () => {
+      setConfirmModal({ open: false });
+      try {
+        await api.deleteApplication(id);
+        refetchApps();
+      } catch (err) {
+        setDeleteError((err as Error).message || 'Failed to delete');
+      }
+    });
   };
 
-  const handleDeleteInterview = async (id: string) => {
-    if (!window.confirm('Delete this interview?')) return;
-    try {
-      await api.deleteInterview(id);
-      refetchIvs();
-    } catch (err) {
-      alert((err as Error).message || 'Failed to delete');
-    }
+  const handleDeleteInterview = (id: string) => {
+    confirm('Delete this interview?', async () => {
+      setConfirmModal({ open: false });
+      try {
+        await api.deleteInterview(id);
+        refetchIvs();
+      } catch (err) {
+        setDeleteError((err as Error).message || 'Failed to delete');
+      }
+    });
   };
 
   const isLoading = appsLoading || ivsLoading;
@@ -64,7 +74,9 @@ export function Dashboard() {
           </div>
         </div>
 
-        {hasError && <div className="alert alert--error">{appsError || ivsError}</div>}
+        {(hasError || deleteError) && (
+          <div className="alert alert--error">{appsError || ivsError || deleteError}</div>
+        )}
 
         {isLoading ? (
           <div className="loading-state">Loading your data…</div>
@@ -120,6 +132,20 @@ export function Dashboard() {
             onClose={() => setIvModal({ open: false })}
             onSaved={() => { setIvModal({ open: false }); refetchIvs(); }}
           />
+        </Modal>
+      )}
+
+      {confirmModal.open && (
+        <Modal title="Confirm Delete" onClose={() => setConfirmModal({ open: false })}>
+          <p style={{ marginBottom: '1.5rem' }}>{confirmModal.message}</p>
+          <div className="form-actions">
+            <button className="btn btn-secondary" onClick={() => setConfirmModal({ open: false })}>
+              Cancel
+            </button>
+            <button className="btn btn-danger" onClick={confirmModal.onConfirm}>
+              Delete
+            </button>
+          </div>
         </Modal>
       )}
     </Layout>
