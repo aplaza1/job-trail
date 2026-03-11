@@ -28,7 +28,7 @@ export class ApiStack extends cdk.Stack {
     };
 
     const commonLambdaProps = {
-      runtime: lambda.Runtime.NODEJS_20_X,
+      runtime: lambda.Runtime.NODEJS_18_X,
       handler: 'index.handler',
       environment: commonEnv,
       timeout: cdk.Duration.seconds(30),
