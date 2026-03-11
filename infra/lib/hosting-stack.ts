@@ -13,7 +13,7 @@ export class HostingStack extends cdk.Stack {
     super(scope, id, props);
 
     const siteBucket = new s3.Bucket(this, 'SiteBucket', {
-      bucketName: `job-trail-frontend-${this.account}`,
+      bucketName: `job-trail-frontend-${this.account}-${this.region}`,
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
