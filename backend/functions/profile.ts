@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { CognitoIdentityProviderClient, AdminDeleteUserCommand } from '@aws-sdk/client-cognito-identity-provider';
 import { deleteItem, getItem, putItem, queryPartitionItems } from '../shared/db';
 import { badRequest, getCognitoUsername, getUserId, noContent, ok, parseBody, serverError } from '../shared/middleware';
+import { logLambdaError } from '../shared/logging';
 
 interface Profile {
   userId: string;
@@ -29,8 +30,9 @@ async function getOrCreateProfile(userId: string): Promise<Profile & { PK: strin
 }
 
 export const handler = async (event: APIGatewayProxyEventV2WithJWTAuthorizer): Promise<APIGatewayProxyResultV2> => {
+  let userId: string | undefined;
   try {
-    const userId = getUserId(event);
+    userId = getUserId(event);
     const method = event.requestContext.http.method;
     const userPoolId = process.env.COGNITO_USER_POOL_ID;
 
@@ -100,7 +102,12 @@ export const handler = async (event: APIGatewayProxyEventV2WithJWTAuthorizer): P
 
     return badRequest('Method not supported');
   } catch (e) {
-    console.error(e);
+    logLambdaError({
+      operation: 'profile.handler',
+      requestId: event.requestContext.requestId,
+      userId,
+      error: e,
+    });
     return serverError();
   }
 };

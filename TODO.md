@@ -88,6 +88,7 @@ password are permanently locked out. AWS Amplify's `resetPassword` / `confirmRes
 APIs are available and ready to use.
 **Fix:** Add a `ForgotPassword.tsx` page and link to it from the Login form.
 **Estimate:** half day
+**Status (2026-03-11): ✅ Completed** — added forgot-password route and two-step reset flow using Amplify `resetPassword` + `confirmResetPassword`.
 
 ### M2. Missing SEO and Open Graph meta tags
 **File:** `frontend/index.html`
@@ -96,12 +97,14 @@ The `<head>` has only a title and viewport. No `<meta name="description">`,
 This means poor search rankings and ugly link previews when shared.
 **Fix:** Add standard meta tags to `index.html`.
 **Estimate:** 30 min
+**Status (2026-03-11): ✅ Completed** — added description, Open Graph, Twitter, and canonical meta tags.
 
 ### M3. No Privacy Policy or Terms of Service
 No legal pages exist and no routes point to them. Required for any public-facing product
 that collects user data (email + job search history).
 **Fix:** Add `/privacy` and `/terms` routes with basic pages.
 **Estimate:** depends on content
+**Status (2026-03-11): ✅ Completed** — added Privacy and Terms pages, routes, and footer links.
 
 ### M4. Lambda memory defaults to 128 MB
 **File:** `infra/lib/api-stack.ts` (`commonLambdaProps`)
@@ -109,12 +112,14 @@ Memory is not specified, so all 4 Lambdas run with Node.js 18 in 128 MB — this
 slow cold starts and OOM risk. AWS recommends 512–1024 MB for typical Node.js workloads.
 **Fix:** Add `memorySize: 512` to `commonLambdaProps`.
 **Estimate:** 5 min
+**Status (2026-03-11): ✅ Completed** — all API Lambdas now set to `memorySize: 512`.
 
 ### M5. Weak password policy
 **File:** `infra/lib/auth-stack.ts` lines 20–26
 Passwords only require 8 chars, lowercase, and digits. No uppercase or symbols required.
 **Fix:** Set `requireUppercase: true, requireSymbols: true`.
 **Estimate:** 5 min
+**Status (2026-03-11): ✅ Completed** — Cognito password policy now requires uppercase and symbols.
 
 ### M6. No structured logging — hard to debug production issues
 All Lambda error logging is bare `console.error(e)` with no request ID, user ID, or
@@ -122,6 +127,7 @@ operation context. Impossible to correlate errors across functions in CloudWatch
 **Fix:** Add a minimal log wrapper that includes `{ requestId, userId, operation, error }`
 in each `catch` block.
 **Estimate:** 1 hr
+**Status (2026-03-11): ✅ Completed** — added shared structured error logger and integrated it in all Lambda handlers.
 
 ### M7. No global React error boundary
 **File:** `frontend/src/main.tsx`
@@ -129,6 +135,7 @@ Unhandled render errors crash the entire app with a blank screen. No error bound
 **Fix:** Wrap `<App />` in a simple `ErrorBoundary` component that shows a friendly
 "Something went wrong" message.
 **Estimate:** 30 min
+**Status (2026-03-11): ✅ Completed** — app now renders inside a global `ErrorBoundary`.
 
 ---
 
@@ -184,11 +191,5 @@ Used on the modal overlay. Falls back gracefully (modal still visible) but worth
 
 ## Priority Order for Implementation
 1. ✅ C1–C8 completed on 2026-03-11
-2. M4 (Lambda memory) — 5 min CDK change
-3. M5 (password policy) — 5 min CDK change
-4. M1 (password reset) — half day
-5. M2 (SEO meta) — 30 min
-6. M3 (legal pages) — depends on content
-7. M6 (structured logging) — 1 hr
-8. M7 (error boundary) — 30 min
-9. L1–L7 (polish) — 2–3 hrs total
+2. ✅ M1–M7 completed on 2026-03-11
+3. L1–L7 (polish) — 2–3 hrs total

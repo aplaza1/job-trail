@@ -60,3 +60,26 @@ export async function confirmSignUp(input: { username: string; confirmationCode:
   const { confirmSignUp: _fn } = await import('aws-amplify/auth');
   return _fn(input);
 }
+
+export async function resetPassword(input: { username: string }) {
+  if (DEV_MODE) {
+    return {
+      nextStep: {
+        resetPasswordStep: 'CONFIRM_RESET_PASSWORD_WITH_CODE' as const,
+        codeDeliveryDetails: { destination: input.username },
+      },
+    };
+  }
+  const { resetPassword: _fn } = await import('aws-amplify/auth');
+  return _fn(input);
+}
+
+export async function confirmResetPassword(input: {
+  username: string;
+  confirmationCode: string;
+  newPassword: string;
+}) {
+  if (DEV_MODE) return;
+  const { confirmResetPassword: _fn } = await import('aws-amplify/auth');
+  return _fn(input);
+}

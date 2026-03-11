@@ -57,6 +57,15 @@ export function Layout({ children }: Props) {
       <main className="main-content">
         {children}
       </main>
+      <footer className="site-footer">
+        <div className="site-footer-inner">
+          <span className="site-footer-copy">© {new Date().getFullYear()} Job Trail</span>
+          <div className="site-footer-links">
+            <Link to="/privacy" className="site-footer-link">Privacy</Link>
+            <Link to="/terms" className="site-footer-link">Terms</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

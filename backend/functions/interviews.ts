@@ -2,6 +2,7 @@ import type { APIGatewayProxyEventV2WithJWTAuthorizer, APIGatewayProxyResultV2 }
 import { v4 as uuidv4 } from 'uuid';
 import { getItem, putItem, deleteItem, queryItems } from '../shared/db';
 import { getUserId, ok, created, noContent, notFound, badRequest, serverError, parseBody } from '../shared/middleware';
+import { logLambdaError } from '../shared/logging';
 
 interface Interview {
   id: string;
@@ -23,8 +24,9 @@ function toInterview(item: Record<string, unknown>): Interview {
 }
 
 export const handler = async (event: APIGatewayProxyEventV2WithJWTAuthorizer): Promise<APIGatewayProxyResultV2> => {
+  let userId: string | undefined;
   try {
-    const userId = getUserId(event);
+    userId = getUserId(event);
     const method = event.requestContext.http.method;
     const id = event.pathParameters?.id;
 
@@ -82,7 +84,12 @@ export const handler = async (event: APIGatewayProxyEventV2WithJWTAuthorizer): P
 
     return badRequest('Method not supported');
   } catch (e) {
-    console.error(e);
+    logLambdaError({
+      operation: 'interviews.handler',
+      requestId: event.requestContext.requestId,
+      userId,
+      error: e,
+    });
     return serverError();
   }
 };

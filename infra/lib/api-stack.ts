@@ -36,6 +36,7 @@ export class ApiStack extends cdk.Stack {
       handler: 'index.handler',
       environment: commonEnv,
       timeout: cdk.Duration.seconds(30),
+      memorySize: 512,
     };
 
     const distPath = path.join(__dirname, '../../backend/dist');

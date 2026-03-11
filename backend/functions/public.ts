@@ -1,6 +1,7 @@
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { getItem, queryItems } from '../shared/db';
 import { ok, notFound, serverError } from '../shared/middleware';
+import { logLambdaError } from '../shared/logging';
 
 export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
   try {
@@ -30,7 +31,11 @@ export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGateway
       interviews: intItems.map(strip),
     });
   } catch (e) {
-    console.error(e);
+    logLambdaError({
+      operation: 'public.handler',
+      requestId: event.requestContext.requestId,
+      error: e,
+    });
     return serverError();
   }
 };

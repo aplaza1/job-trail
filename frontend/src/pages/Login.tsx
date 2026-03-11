@@ -59,6 +59,9 @@ export function Login() {
                 required
                 autoComplete="current-password"
               />
+              <div className="auth-inline-link-row">
+                <Link to="/forgot-password" className="auth-link">Forgot password?</Link>
+              </div>
             </div>
             <button type="submit" className="btn btn-primary btn--full" disabled={loading}>
               {loading ? 'Signing in…' : 'Sign In'}

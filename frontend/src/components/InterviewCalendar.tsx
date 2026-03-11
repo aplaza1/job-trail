@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react';
 import type { Interview } from '../types';
 
 interface Props {
@@ -9,18 +10,22 @@ interface Props {
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-function getBusinessDays(from: Date, count: number): Date[] {
-  const days: Date[] = [];
-  const cursor = new Date(from);
-  cursor.setHours(0, 0, 0, 0);
-  while (days.length < count) {
-    const dow = cursor.getDay();
-    if (dow !== 0 && dow !== 6) {
-      days.push(new Date(cursor));
-    }
-    cursor.setDate(cursor.getDate() + 1);
-  }
-  return days;
+function addDays(date: Date, days: number): Date {
+  const copy = new Date(date);
+  copy.setDate(copy.getDate() + days);
+  return copy;
+}
+
+function getCurrentWeekStart(from: Date): Date {
+  const start = new Date(from);
+  start.setHours(0, 0, 0, 0);
+  const day = start.getDay();
+  const diffToMonday = day === 0 ? -6 : 1 - day;
+  return addDays(start, diffToMonday);
+}
+
+function getWorkWeekDays(monday: Date): Date[] {
+  return [0, 1, 2, 3, 4].map(offset => addDays(monday, offset));
 }
 
 function toYMD(d: Date): string {
@@ -71,9 +76,21 @@ function formatTime(time: string): string {
 }
 
 export function InterviewCalendar({ interviews, onEdit, onDelete }: Props) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const businessDays = getBusinessDays(today, 5);
+  const [weekOffset, setWeekOffset] = useState(0);
+
+  const today = useMemo(() => {
+    const date = new Date();
+    date.setHours(0, 0, 0, 0);
+    return date;
+  }, []);
+
+  const currentWeekStart = useMemo(() => getCurrentWeekStart(today), [today]);
+  const currentWeekDays = useMemo(() => getWorkWeekDays(currentWeekStart), [currentWeekStart]);
+
+  const businessDays = useMemo(() => {
+    const weekStart = addDays(currentWeekStart, weekOffset * 7);
+    return getWorkWeekDays(weekStart);
+  }, [currentWeekStart, weekOffset]);
 
   const firstDay = businessDays[0];
   const lastDay = businessDays[businessDays.length - 1];
@@ -91,16 +108,40 @@ export function InterviewCalendar({ interviews, onEdit, onDelete }: Props) {
     byDate.get(ymd)!.push(interview);
   }
 
-  // Count upcoming (today or later)
   const todayYMD = toYMD(today);
-  const upcomingCount = interviews.filter(i => i.date >= todayYMD).length;
+  const firstDayYMD = toYMD(firstDay);
+  const lastDayYMD = toYMD(lastDay);
+  const weekCount = interviews.filter(i => i.date >= firstDayYMD && i.date <= lastDayYMD).length;
 
   return (
     <div className="calendar-section">
       <div className="calendar-header">
-        <h3 className="calendar-title">Upcoming Interviews</h3>
-        {upcomingCount > 0 && (
-          <span className="upcoming-badge">{upcomingCount} upcoming</span>
+        <h3 className="calendar-title">Interview Calendar</h3>
+        {weekCount > 0 && <span className="upcoming-badge">{weekCount} in view</span>}
+      </div>
+      <div className="calendar-nav">
+        <div className="calendar-nav-arrows">
+          <button
+            type="button"
+            className="calendar-nav-btn"
+            onClick={() => setWeekOffset(offset => offset - 1)}
+            aria-label="Previous week"
+          >
+            ←
+          </button>
+          <button
+            type="button"
+            className="calendar-nav-btn"
+            onClick={() => setWeekOffset(offset => offset + 1)}
+            aria-label="Next week"
+          >
+            →
+          </button>
+        </div>
+        {weekOffset !== 0 && (
+          <button type="button" className="calendar-reset-btn" onClick={() => setWeekOffset(0)}>
+            Current week
+          </button>
         )}
       </div>
       <div className="calendar-week-label">{weekLabel}</div>
@@ -110,7 +151,8 @@ export function InterviewCalendar({ interviews, onEdit, onDelete }: Props) {
           const dayInterviews = (byDate.get(ymd) || []).sort(
             (a, b) => parseTime(a.time) - parseTime(b.time)
           );
-          const isToday = ymd === todayYMD;
+          const isCurrentWeek = currentWeekDays.some(currentDay => toYMD(currentDay) === ymd);
+          const isToday = isCurrentWeek && ymd === todayYMD;
           const hasBusy = dayInterviews.length > 0;
 
           return (
