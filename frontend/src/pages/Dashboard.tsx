@@ -10,9 +10,12 @@ import { InterviewForm } from './InterviewForm';
 import { useApplications } from '../hooks/useApplications';
 import { useInterviews } from '../hooks/useInterviews';
 import { api } from '../lib/api';
+import type { Application } from '../types';
 
 type AppModal  = { open: true; editId?: string } | { open: false };
 type IvModal   = { open: true; editId?: string } | { open: false };
+type JobIvModal = { open: true; app: Application } | { open: false };
+type AddIvFromJobModal = { open: true; app: Application } | { open: false };
 
 export function Dashboard() {
   const { applications, loading: appsLoading, error: appsError, refetch: refetchApps } = useApplications();
@@ -20,6 +23,8 @@ export function Dashboard() {
 
   const [appModal, setAppModal] = useState<AppModal>({ open: false });
   const [ivModal,  setIvModal]  = useState<IvModal>({ open: false });
+  const [jobIvModal, setJobIvModal] = useState<JobIvModal>({ open: false });
+  const [addIvFromJob, setAddIvFromJob] = useState<AddIvFromJobModal>({ open: false });
 
   const handleDeleteApplication = async (id: string) => {
     if (!window.confirm('Delete this application?')) return;
@@ -83,6 +88,8 @@ export function Dashboard() {
                   applications={applications}
                   onEdit={id => setAppModal({ open: true, editId: id })}
                   onDelete={handleDeleteApplication}
+                  onViewInterviews={app => setJobIvModal({ open: true, app })}
+                  onAddInterview={app => setAddIvFromJob({ open: true, app })}
                 />
               </div>
 
@@ -120,6 +127,54 @@ export function Dashboard() {
             editId={ivModal.editId}
             onClose={() => setIvModal({ open: false })}
             onSaved={() => { setIvModal({ open: false }); refetchIvs(); }}
+          />
+        </Modal>
+      )}
+
+      {jobIvModal.open && (
+        <Modal
+          title={`Interviews — ${jobIvModal.app.company}`}
+          onClose={() => setJobIvModal({ open: false })}
+        >
+          {(() => {
+            const linked = interviews.filter(iv => iv.applicationId === jobIvModal.app.id);
+            if (linked.length === 0) {
+              return <p style={{ color: 'var(--text-secondary, #6b7280)' }}>No interviews linked to this application yet.</p>;
+            }
+            return (
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {linked.map(iv => (
+                  <li key={iv.id} style={{ padding: '0.75rem', background: 'var(--surface-alt, #f9fafb)', borderRadius: '0.5rem' }}>
+                    <div style={{ fontWeight: 600 }}>{iv.type}</div>
+                    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary, #6b7280)' }}>
+                      {iv.date} · {iv.time}{iv.tentative ? ' · tentative' : ''}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            );
+          })()}
+          <div className="form-actions" style={{ marginTop: '1.5rem' }}>
+            <button className="btn btn-secondary" onClick={() => setJobIvModal({ open: false })}>Close</button>
+            <button className="btn btn-primary" onClick={() => {
+              setJobIvModal({ open: false });
+              setAddIvFromJob({ open: true, app: jobIvModal.app });
+            }}>Add Interview</button>
+          </div>
+        </Modal>
+      )}
+
+      {addIvFromJob.open && (
+        <Modal
+          title={`Add Interview — ${addIvFromJob.app.company}`}
+          onClose={() => setAddIvFromJob({ open: false })}
+        >
+          <InterviewForm
+            applicationId={addIvFromJob.app.id}
+            prefillCompany={addIvFromJob.app.company}
+            prefillTitle={addIvFromJob.app.title}
+            onClose={() => setAddIvFromJob({ open: false })}
+            onSaved={() => { setAddIvFromJob({ open: false }); refetchIvs(); }}
           />
         </Modal>
       )}
