@@ -42,6 +42,20 @@ function parseTime(time: string): number {
   return hours * 60 + mins;
 }
 
+function formatTime(time: string): string {
+  if (!time || time.toUpperCase() === 'TBD') return 'TBD';
+  // Already in AM/PM format (legacy data)
+  if (/AM|PM/i.test(time)) {
+    return time.replace(/\s*(AM|PM)/i, (_, m) => m.toUpperCase());
+  }
+  // 24h HH:MM format from native time input
+  const [h, m] = time.split(':').map(Number);
+  if (isNaN(h) || isNaN(m)) return time;
+  const period = h >= 12 ? 'PM' : 'AM';
+  const hour = h % 12 || 12;
+  return `${hour}:${String(m).padStart(2, '0')}${period}`;
+}
+
 export function InterviewCalendar({ interviews, onEdit, onDelete }: Props) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -110,7 +124,7 @@ export function InterviewCalendar({ interviews, onEdit, onDelete }: Props) {
                         <span className="calendar-event-company">{iv.company}</span>
                         {iv.type && <span className="calendar-event-type">{iv.type}</span>}
                         <span className="calendar-event-time">
-                          {iv.time || 'TBD'}
+                          {formatTime(iv.time)}
                           {iv.tentative && ' · tentative'}
                         </span>
                       </div>
