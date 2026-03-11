@@ -30,14 +30,15 @@
   <!-- accent top bar -->
   <rect width="1200" height="5" fill="url(#accent)"/>
 
-  <!-- logo mark (left side) -->
+  <!-- logo mark -->
   <g transform="translate(100, 215)">
     <rect width="110" height="110" rx="22" fill="url(#accent)"/>
-    <circle cx="28" cy="80" r="8" fill="white" opacity="0.55"/>
-    <circle cx="55" cy="55" r="8" fill="white" opacity="0.75"/>
-    <circle cx="82" cy="30" r="8" fill="white"/>
-    <line x1="28" y1="80" x2="55" y2="55" stroke="white" stroke-width="4" stroke-linecap="round" stroke-dasharray="6 5" opacity="0.55"/>
-    <line x1="55" y1="55" x2="82" y2="30" stroke="white" stroke-width="4" stroke-linecap="round" stroke-dasharray="6 5" opacity="0.75"/>
+    <!-- briefcase body -->
+    <rect x="14" y="42" width="82" height="55" rx="7" fill="white" opacity="0.95"/>
+    <!-- briefcase handle -->
+    <path d="M36 42v-9a7 7 0 0 1 7-7h24a7 7 0 0 1 7 7v9" stroke="white" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.95"/>
+    <!-- checkmark -->
+    <polyline points="30,69 45,84 80,52" stroke="#4f46e5" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
   </g>
 
   <!-- wordmark -->
