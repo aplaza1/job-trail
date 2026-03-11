@@ -34,33 +34,35 @@ export class ApiStack extends cdk.Stack {
       timeout: cdk.Duration.seconds(30),
     };
 
+    const distPath = path.join(__dirname, '../../backend/dist');
+
     // Lambda functions - code from backend/dist
     const applicationsFunction = new lambda.Function(this, 'ApplicationsFunction', {
       ...commonLambdaProps,
       functionName: 'job-trail-applications',
-      code: lambda.Code.fromAsset(path.join(__dirname, '../../backend/dist/functions/applications')),
-      handler: 'applications.handler',
+      code: lambda.Code.fromAsset(distPath),
+      handler: 'functions/applications.handler',
     });
 
     const interviewsFunction = new lambda.Function(this, 'InterviewsFunction', {
       ...commonLambdaProps,
       functionName: 'job-trail-interviews',
-      code: lambda.Code.fromAsset(path.join(__dirname, '../../backend/dist/functions/interviews')),
-      handler: 'interviews.handler',
+      code: lambda.Code.fromAsset(distPath),
+      handler: 'functions/interviews.handler',
     });
 
     const profileFunction = new lambda.Function(this, 'ProfileFunction', {
       ...commonLambdaProps,
       functionName: 'job-trail-profile',
-      code: lambda.Code.fromAsset(path.join(__dirname, '../../backend/dist/functions/profile')),
-      handler: 'profile.handler',
+      code: lambda.Code.fromAsset(distPath),
+      handler: 'functions/profile.handler',
     });
 
     const publicFunction = new lambda.Function(this, 'PublicFunction', {
       ...commonLambdaProps,
       functionName: 'job-trail-public',
-      code: lambda.Code.fromAsset(path.join(__dirname, '../../backend/dist/functions/public')),
-      handler: 'public.handler',
+      code: lambda.Code.fromAsset(distPath),
+      handler: 'functions/public.handler',
     });
 
     // Grant DynamoDB access
