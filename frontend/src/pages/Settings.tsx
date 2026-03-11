@@ -1,17 +1,20 @@
 import { useState, useEffect, type FormEvent } from 'react';
 import { Layout } from '../components/Layout';
 import { useProfile } from '../hooks/useProfile';
+import { signOut } from '../lib/auth';
 
 const BASE_URL = typeof window !== 'undefined' ? window.location.origin : '';
 
 export function Settings() {
-  const { profile, loading, error, updateProfile } = useProfile();
+  const { profile, loading, error, updateProfile, deleteProfile } = useProfile();
   const [displayName, setDisplayName] = useState('');
   const [isPublic, setIsPublic] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   useEffect(() => {
     if (profile) {
@@ -56,6 +59,24 @@ export function Settings() {
       document.body.removeChild(input);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    const confirmed = window.confirm(
+      'Delete your account permanently? This removes your profile, applications, interviews, and public share link.'
+    );
+    if (!confirmed) return;
+
+    setDeleteError(null);
+    setDeleting(true);
+    try {
+      await deleteProfile();
+      await signOut().catch(() => undefined);
+      window.location.assign('/');
+    } catch (err) {
+      setDeleteError((err as Error).message || 'Failed to delete account');
+      setDeleting(false);
     }
   };
 
@@ -137,6 +158,26 @@ export function Settings() {
                   </button>
                 </div>
               </form>
+
+              <hr className="settings-divider" />
+
+              <div className="settings-danger-zone">
+                <h3 className="settings-danger-title">Delete Account</h3>
+                <p className="form-hint">
+                  Permanently remove your account and all associated data. This action cannot be undone.
+                </p>
+                {deleteError && <div className="alert alert--error">{deleteError}</div>}
+                <div className="form-actions settings-danger-actions">
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={handleDeleteAccount}
+                    disabled={deleting}
+                  >
+                    {deleting ? 'Deleting…' : 'Delete Account'}
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </div>

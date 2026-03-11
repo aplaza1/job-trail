@@ -1126,6 +1126,30 @@ img, svg { display: block; max-width: 100%; }
   color: var(--text-muted);
 }
 
+.settings-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
+}
+
+.settings-danger-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.settings-danger-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #991b1b;
+}
+
+.settings-danger-actions {
+  margin-top: 0.5rem;
+  padding-top: 0;
+  border-top: 0;
+}
+
 /* ===== PUBLIC VIEW ===== */
 .public-badge {
   display: inline-flex;

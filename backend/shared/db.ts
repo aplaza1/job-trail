@@ -1,5 +1,5 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand, DeleteCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
+import { DynamoDBDocumentClient, GetCommand, PutCommand, QueryCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
 
 const TABLE_NAME = process.env.TABLE_NAME || 'job-trail';
 
@@ -40,4 +40,25 @@ export async function queryItems(PK: string, SKPrefix: string) {
     },
   }));
   return result.Items || [];
+}
+
+export async function queryPartitionItems(PK: string) {
+  const items: Record<string, unknown>[] = [];
+  let ExclusiveStartKey: Record<string, unknown> | undefined;
+
+  do {
+    const result = await db.send(new QueryCommand({
+      TableName: TABLE_NAME,
+      KeyConditionExpression: 'PK = :pk',
+      ExpressionAttributeValues: {
+        ':pk': PK,
+      },
+      ExclusiveStartKey,
+    }));
+
+    if (result.Items) items.push(...(result.Items as Record<string, unknown>[]));
+    ExclusiveStartKey = result.LastEvaluatedKey as Record<string, unknown> | undefined;
+  } while (ExclusiveStartKey);
+
+  return items;
 }

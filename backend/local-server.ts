@@ -210,6 +210,20 @@ app.put('/profile', (req: Request, res: Response) => {
   res.json(strip(updated));
 });
 
+app.delete('/profile', (_req: Request, res: Response) => {
+  const profile = db.get(`USER#${DEV_USER_ID}`, 'PROFILE');
+  if (profile?.shareToken) {
+    db.delete(`SHARE#${String(profile.shareToken)}`, 'PROFILE');
+  }
+
+  const userItems = db.query(`USER#${DEV_USER_ID}`, '');
+  for (const item of userItems) {
+    db.delete(item.PK, item.SK);
+  }
+
+  res.sendStatus(204);
+});
+
 // ─── Public view ─────────────────────────────────────────────────────────────
 
 app.get('/public/:shareToken', (req: Request, res: Response) => {

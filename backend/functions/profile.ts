@@ -1,7 +1,8 @@
 import type { APIGatewayProxyEventV2WithJWTAuthorizer, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { v4 as uuidv4 } from 'uuid';
-import { getItem, putItem, TABLE_NAME } from '../shared/db';
-import { getUserId, ok, parseBody, serverError } from '../shared/middleware';
+import { CognitoIdentityProviderClient, AdminDeleteUserCommand } from '@aws-sdk/client-cognito-identity-provider';
+import { deleteItem, getItem, putItem, queryPartitionItems } from '../shared/db';
+import { badRequest, getCognitoUsername, getUserId, noContent, ok, parseBody, serverError } from '../shared/middleware';
 
 interface Profile {
   userId: string;
@@ -31,6 +32,7 @@ export const handler = async (event: APIGatewayProxyEventV2WithJWTAuthorizer): P
   try {
     const userId = getUserId(event);
     const method = event.requestContext.http.method;
+    const userPoolId = process.env.COGNITO_USER_POOL_ID;
 
     if (method === 'GET') {
       const profile = await getOrCreateProfile(userId);
@@ -65,7 +67,38 @@ export const handler = async (event: APIGatewayProxyEventV2WithJWTAuthorizer): P
       return ok(rest);
     }
 
-    return ok({});
+    if (method === 'DELETE') {
+      if (!userPoolId) return serverError('Cognito user pool not configured');
+
+      const cognitoUsername = getCognitoUsername(event);
+      const profile = await getItem(`USER#${userId}`, 'PROFILE') as (Profile & { PK: string; SK: string }) | undefined;
+      const userItems = await queryPartitionItems(`USER#${userId}`);
+
+      const deletePromises = userItems
+        .map(item => {
+          const PK = item.PK;
+          const SK = item.SK;
+          if (typeof PK !== 'string' || typeof SK !== 'string') return null;
+          return deleteItem(PK, SK);
+        })
+        .filter((value): value is Promise<void> => value !== null);
+
+      await Promise.all(deletePromises);
+
+      if (profile?.shareToken) {
+        await deleteItem(`SHARE#${profile.shareToken}`, 'PROFILE');
+      }
+
+      const cognito = new CognitoIdentityProviderClient({});
+      await cognito.send(new AdminDeleteUserCommand({
+        UserPoolId: userPoolId,
+        Username: cognitoUsername,
+      }));
+
+      return noContent();
+    }
+
+    return badRequest('Method not supported');
   } catch (e) {
     console.error(e);
     return serverError();

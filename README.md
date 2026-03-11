@@ -99,6 +99,7 @@ Base URL: `https://<api-id>.execute-api.us-west-2.amazonaws.com`
 |---|---|---|
 | `GET` | `/profile` | Get profile (auto-created on first access) |
 | `PUT` | `/profile` | Update profile |
+| `DELETE` | `/profile` | Delete account and all user data |
 
 **Profile object**:
 ```json

@@ -10,9 +10,37 @@ env:
   NODE_VERSION: '20'
 
 jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run backend tests
+        working-directory: backend
+        run: npm test
+
+      - name: Frontend typecheck
+        working-directory: frontend
+        run: npm run typecheck
+
+      - name: Frontend lint
+        working-directory: frontend
+        run: npm run lint
+
   deploy-infra:
     name: Deploy CDK Infrastructure
     runs-on: ubuntu-latest
+    needs: validate
     outputs:
       api-url: ${{ steps.cdk-outputs.outputs.api-url }}
       user-pool-id: ${{ steps.cdk-outputs.outputs.user-pool-id }}

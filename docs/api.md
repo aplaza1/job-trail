@@ -435,6 +435,30 @@ Returns the full updated profile object.
 
 ---
 
+### `DELETE /profile`
+
+Deletes the authenticated user's account and all associated data:
+- all DynamoDB items under `USER#<userId>` (`APP#`, `INT#`, and `PROFILE`)
+- the `SHARE#<shareToken>` lookup entry (if it exists)
+- the Cognito user via `AdminDeleteUser`
+
+**Request**
+
+```
+DELETE /profile
+Authorization: Bearer <id_token>
+```
+
+**Response** `204 No Content`
+
+No response body.
+
+**Error responses**
+
+- `500 Internal Server Error` — unexpected error
+
+---
+
 ## Public Dashboard
 
 ### `GET /public/:shareToken`
@@ -536,7 +560,7 @@ Each resource group is handled by a dedicated Lambda function deployed from `bac
 |---|---|---|
 | `job-trail-applications` | `functions/applications.handler` | `GET/POST /applications`, `PUT/DELETE /applications/{id}` |
 | `job-trail-interviews` | `functions/interviews.handler` | `GET/POST /interviews`, `PUT/DELETE /interviews/{id}` |
-| `job-trail-profile` | `functions/profile.handler` | `GET/PUT /profile` |
+| `job-trail-profile` | `functions/profile.handler` | `GET/PUT/DELETE /profile` |
 | `job-trail-public` | `functions/public.handler` | `GET /public/{shareToken}` |
 
 All functions run on Node.js 18.x with a 30-second timeout. The `public` function is granted read-only DynamoDB access; all others have read-write access.

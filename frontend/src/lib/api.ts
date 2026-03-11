@@ -1,4 +1,4 @@
-import { getIdToken } from './auth';
+import { getIdToken, signOut } from './auth';
 import type { Application, Interview, Profile, PublicDashboard } from '../types';
 
 const BASE_URL = import.meta.env.VITE_API_URL || '';
@@ -36,6 +36,13 @@ async function request<T>(
     body: body ? JSON.stringify(body) : undefined,
   });
   if (!res.ok) {
+    if (res.status === 401 && requiresAuth) {
+      await signOut().catch(() => undefined);
+      if (typeof window !== 'undefined') {
+        window.location.assign('/login');
+      }
+      throw new ApiError(401, 'Session expired. Please sign in again.');
+    }
     throw await toApiError(res);
   }
   if (res.status === 204) return undefined as T;
@@ -62,6 +69,7 @@ export const api = {
   // Profile
   getProfile: () => request<Profile>('GET', '/profile'),
   updateProfile: (data: Partial<Profile>) => request<Profile>('PUT', '/profile', data),
+  deleteProfile: () => request<void>('DELETE', '/profile'),
 
   // Public
   getPublicDashboard: (shareToken: string) =>

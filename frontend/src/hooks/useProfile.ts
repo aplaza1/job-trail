@@ -32,5 +32,14 @@ export function useProfile() {
     }
   };
 
-  return { profile, loading, error, refetch: fetchData, updateProfile };
+  const deleteProfile = async () => {
+    try {
+      await api.deleteProfile();
+      setProfile(null);
+    } catch (e) {
+      throw new Error((e as Error).message);
+    }
+  };
+
+  return { profile, loading, error, refetch: fetchData, updateProfile, deleteProfile };
 }

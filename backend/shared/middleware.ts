@@ -7,6 +7,13 @@ export function getUserId(event: APIGatewayProxyEventV2WithJWTAuthorizer): strin
   return sub as string;
 }
 
+export function getCognitoUsername(event: APIGatewayProxyEventV2WithJWTAuthorizer): string {
+  const claims = event.requestContext.authorizer?.jwt?.claims;
+  const username = claims?.['cognito:username'] ?? claims?.username;
+  if (!username) throw new Error('Unauthorized');
+  return username as string;
+}
+
 export function ok(body: unknown): APIGatewayProxyResultV2 {
   return {
     statusCode: 200,

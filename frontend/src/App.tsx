@@ -7,6 +7,7 @@ import { Signup } from './pages/Signup';
 import { Dashboard } from './pages/Dashboard';
 import { PublicView } from './pages/PublicView';
 import { Settings } from './pages/Settings';
+import { NotFound } from './pages/NotFound';
 import { useEffect, useState } from 'react';
 import { getCurrentUser } from './lib/auth';
 
@@ -48,6 +49,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
