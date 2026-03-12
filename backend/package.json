@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "esbuild functions/applications.ts functions/interviews.ts functions/profile.ts functions/public.ts --bundle --platform=node --target=node18 --outdir=dist/functions --sourcemap --minify --external:@aws-sdk/*",
+    "build": "esbuild functions/applications.ts functions/interviews.ts functions/profile.ts functions/public.ts functions/admin.ts --bundle --platform=node --target=node22 --outdir=dist/functions --sourcemap --minify --external:@aws-sdk/*",
     "test": "jest",
     "dev:server": "tsx watch local-server.ts"
   },
