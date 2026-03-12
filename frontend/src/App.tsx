@@ -8,6 +8,7 @@ import { ForgotPassword } from './pages/ForgotPassword';
 import { Dashboard } from './pages/Dashboard';
 import { PublicView } from './pages/PublicView';
 import { Settings } from './pages/Settings';
+import { Admin } from './pages/Admin';
 import { NotFound } from './pages/NotFound';
 import { Privacy } from './pages/Privacy';
 import { Terms } from './pages/Terms';
@@ -52,6 +53,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Settings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <Admin />
             </ProtectedRoute>
           }
         />
