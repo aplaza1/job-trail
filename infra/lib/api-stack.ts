@@ -4,6 +4,7 @@ import * as apigatewayIntegrations from 'aws-cdk-lib/aws-apigatewayv2-integratio
 import * as apigatewayAuthorizers from 'aws-cdk-lib/aws-apigatewayv2-authorizers';
 import * as cloudwatch from 'aws-cdk-lib/aws-cloudwatch';
 import * as cloudwatchActions from 'aws-cdk-lib/aws-cloudwatch-actions';
+import * as iam from 'aws-cdk-lib/aws-iam';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as cognito from 'aws-cdk-lib/aws-cognito';
@@ -70,12 +71,28 @@ export class ApiStack extends cdk.Stack {
       handler: 'functions/public.handler',
     });
 
+    const adminFunction = new lambda.Function(this, 'AdminFunction', {
+      ...commonLambdaProps,
+      functionName: 'job-trail-admin',
+      code: lambda.Code.fromAsset(distPath),
+      handler: 'functions/admin.handler',
+      environment: {
+        ...commonEnv,
+        ADMIN_USER_ID: this.node.tryGetContext('adminUserId') ?? process.env.ADMIN_USER_ID ?? '',
+      },
+    });
+
     // Grant DynamoDB access
     table.grantReadWriteData(applicationsFunction);
     table.grantReadWriteData(interviewsFunction);
     table.grantReadWriteData(profileFunction);
     table.grantReadData(publicFunction);
+    table.grantReadData(adminFunction);
     userPool.grant(profileFunction, 'cognito-idp:AdminDeleteUser');
+    adminFunction.addToRolePolicy(new iam.PolicyStatement({
+      actions: ['cognito-idp:ListUsers'],
+      resources: [userPool.userPoolArn],
+    }));
 
     // HTTP API
     const httpApi = new apigateway.HttpApi(this, 'JobTrailApi', {
@@ -139,6 +156,12 @@ export class ApiStack extends cdk.Stack {
     );
     httpApi.addRoutes({ path: '/public/{shareToken}', methods: [apigateway.HttpMethod.GET], integration: publicIntegration });
 
+    // Admin route
+    const adminIntegration = new apigatewayIntegrations.HttpLambdaIntegration(
+      'AdminIntegration', adminFunction
+    );
+    httpApi.addRoutes({ path: '/admin/stats', methods: [apigateway.HttpMethod.GET], integration: adminIntegration, ...authRouteOptions });
+
     const alertsTopic = new sns.Topic(this, 'OperationalAlertsTopic', {
       topicName: 'job-trail-operational-alerts',
       displayName: 'Job Trail Operational Alerts',
@@ -176,6 +199,7 @@ export class ApiStack extends cdk.Stack {
     createLambdaErrorRateAlarm('InterviewsLambda', interviewsFunction);
     createLambdaErrorRateAlarm('ProfileLambda', profileFunction);
     createLambdaErrorRateAlarm('PublicLambda', publicFunction);
+    createLambdaErrorRateAlarm('AdminLambda', adminFunction);
 
     const api5xxAlarm = new cloudwatch.Alarm(this, 'HttpApi5xxAlarm', {
       metric: defaultStage.metricServerError({

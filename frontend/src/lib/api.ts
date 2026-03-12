@@ -1,5 +1,5 @@
 import { getIdToken, signOut } from './auth';
-import type { Application, Interview, Profile, PublicDashboard } from '../types';
+import type { Application, Interview, Profile, PublicDashboard, AdminStats } from '../types';
 
 const BASE_URL = import.meta.env.VITE_API_URL || '';
 
@@ -74,4 +74,7 @@ export const api = {
   // Public
   getPublicDashboard: (shareToken: string) =>
     request<PublicDashboard>('GET', `/public/${shareToken}`, undefined, { requiresAuth: false }),
+
+  // Admin
+  getAdminStats: () => request<AdminStats>('GET', '/admin/stats'),
 };

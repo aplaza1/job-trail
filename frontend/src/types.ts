@@ -38,3 +38,18 @@ export interface PublicDashboard {
   applications: Application[];
   interviews: Interview[];
 }
+
+export interface AdminStats {
+  users: {
+    total: number;
+    newThisWeek: number;
+    newThisMonth: number;
+  };
+  applications: {
+    total: number;
+    byStatus: Record<string, number>;
+  };
+  interviews: {
+    total: number;
+  };
+}
