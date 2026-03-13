@@ -27,7 +27,16 @@ export function PublicView() {
     }
 
     api.getPublicDashboard(shareToken)
-      .then(setData)
+      .then(d => {
+        setData(d);
+        const name = d.displayName ?? 'Someone';
+        const count = d.applications.length;
+        document.title = `${name}'s Job Search — Job Trail`;
+        document.querySelector('meta[name="description"]')
+          ?.setAttribute('content',
+            `${name} is tracking ${count} job application${count !== 1 ? 's' : ''} with Job Trail, a free job application tracker.`
+          );
+      })
       .catch((err: unknown) => {
         if (err instanceof ApiError && err.status === 404) {
           setNotFound(true);
