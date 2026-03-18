@@ -10,7 +10,7 @@ interface Props {
   onAddInterview?: (app: Application) => void;
 }
 
-const STATUS_ORDER: ApplicationStatus[] = ['waiting', 'interviewing', 'applied', 'offer', 'rejected'];
+const STATUS_ORDER: ApplicationStatus[] = ['waiting', 'interviewing', 'applied', 'offer', 'rejected', 'declined'];
 
 function sortApplications(apps: Application[]): Application[] {
   return [...apps].sort((a, b) => {

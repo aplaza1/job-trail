@@ -8,6 +8,7 @@ const STATUSES: { value: ApplicationStatus; label: string }[] = [
   { value: 'waiting',      label: 'Awaiting Decision' },
   { value: 'rejected',     label: 'Rejected' },
   { value: 'offer',        label: 'Offer' },
+  { value: 'declined',     label: 'Declined' },
 ];
 
 const METHODS: ApplicationMethod[] = [

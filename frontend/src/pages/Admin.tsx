@@ -11,6 +11,7 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string; 
   waiting:      { label: 'Awaiting Decision', color: '#5b21b6', bg: '#f5f3ff', border: '#ddd6fe' },
   rejected:     { label: 'Rejected',          color: '#991b1b', bg: '#fef2f2', border: '#fecaca' },
   offer:        { label: 'Offer',             color: '#14532d', bg: '#f0fdf4', border: '#bbf7d0' },
+  declined:     { label: 'Declined',          color: '#374151', bg: '#f9fafb', border: '#d1d5db' },
 };
 
 export function Admin() {
