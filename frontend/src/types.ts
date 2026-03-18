@@ -1,4 +1,4 @@
-export type ApplicationStatus = "applied" | "interviewing" | "waiting" | "rejected" | "offer";
+export type ApplicationStatus = "applied" | "interviewing" | "waiting" | "rejected" | "offer" | "declined";
 export type ApplicationMethod = "LinkedIn" | "Company Website" | "Referral" | "Indeed" | "Glassdoor" | "Recruiter" | "Other";
 
 export interface Application {
